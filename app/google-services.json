@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "8953221064",
+    "project_id": "musterikayituygulamasi-7e803",
+    "storage_bucket": "musterikayituygulamasi-7e803.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8953221064:android:ba7d41a5cfb42b75b43afd",
+        "android_client_info": {
+          "package_name": "com.example.musteri_kayit_uygulamasi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDgcxMhh7psCmsf8AxdhdIx5JnJqD3zRc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
