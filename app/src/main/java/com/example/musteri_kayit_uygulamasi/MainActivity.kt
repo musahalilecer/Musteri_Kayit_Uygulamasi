@@ -1,20 +1,28 @@
 package com.example.musteri_kayit_uygulamasi
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.musteri_kayit_uygulamasi.repository.RegionRepository
+import com.example.musteri_kayit_uygulamasi.service.RegionService
 import com.example.musteri_kayit_uygulamasi.ui.theme.Musteri_Kayit_UygulamasiTheme
 import com.example.musteri_kayit_uygulamasi.view.LoginScreen
 import com.example.musteri_kayit_uygulamasi.view.MainScreen
 import com.example.musteri_kayit_uygulamasi.view.RegisterScreen
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +30,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Musteri_Kayit_UygulamasiTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold{ innerPadding ->
                     MainScreen(innerPadding)
                 }
             }
@@ -30,7 +38,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -38,3 +46,5 @@ fun GreetingPreview() {
 
     }
 }
+
+ */

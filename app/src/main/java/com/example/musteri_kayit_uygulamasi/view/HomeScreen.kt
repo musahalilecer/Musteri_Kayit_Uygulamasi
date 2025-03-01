@@ -19,6 +19,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -57,12 +59,24 @@ import com.google.firebase.firestore.FirebaseFirestore
 @Composable
 fun HomeScreen(navController: NavController, paddingValues: PaddingValues) {
     val firestore = FirebaseFirestore.getInstance()
-    val viewmodel = CustomerViewModel(customerService = CustomerService(customerRepository = CustomerRepository(firestore)))
-    val state by viewmodel.customers.collectAsState()
+    val viewModel = CustomerViewModel(customerService = CustomerService(customerRepository = CustomerRepository(firestore)))
+    val state by viewModel.customers.collectAsState()
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Müşteri Kayıt Projesi") },
+                navigationIcon = {
+                    Icon(
+                        Icons.Default.Settings,
+                        "",
+                        modifier = Modifier
+                            .clickable {
+                                navController.navigate("setting")
+                            }
+
+                    )
+                }
             )
         },
         floatingActionButton = {
@@ -72,6 +86,7 @@ fun HomeScreen(navController: NavController, paddingValues: PaddingValues) {
                 Icon(Icons.Default.Add, "")
             }
         }
+
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -80,16 +95,15 @@ fun HomeScreen(navController: NavController, paddingValues: PaddingValues) {
         ) {
             SearchBarByName(
                 modifier = Modifier.fillMaxWidth(),
-                hint = "Musteri Ara...",
+                hint = "Müşteri Ara...",
                 onSearch = { query ->
-                    // Handle search logic here
+                    // Arama mantığını burada işleyin
                 }
             )
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Müşteri Listesi",
@@ -103,43 +117,42 @@ fun HomeScreen(navController: NavController, paddingValues: PaddingValues) {
                 ) {
                     items(state) { customer ->
                         CustomerCard(
-                            name = customer.name,
-                            surname = customer.surname,
-                            city = customer.city,
-                            onClick = { navController.navigate("customer_detail/${customer.id}") }
+                            customer = customer,
+                            onClick = { navController.navigate("customer_detail/${customer.id}") },
+                            onDelete = { customerToDelete -> viewModel.deleteCustomer(customerToDelete.id) } // Silme işlemini burada sağlıyoruz
                         )
                     }
                 }
             }
         }
-
     }
 }
 
 @Composable
 fun CustomerCard(
-    name: String,
-    surname: String,
-    city: String,
-    onClick: () -> Unit) {
-    val customer = Customer()
+    customer: Customer, // Müşteri nesnesini doğrudan parametre olarak alıyoruz
+    onClick: () -> Unit,
+    onDelete: (Customer) -> Unit // Silme işlemini parametre olarak geçiriyoruz
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .clickable { onClick() },
-        shape = RoundedCornerShape(8.dp),
-    //    backgroundColor = Color.White,
-    //    contentColor = Color.Black,
-    //    elevation = 4.dp
+        shape = RoundedCornerShape(8.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Text("Müşteri Adı Soyadı: $name $surname")
-            Text("Müşteri Şehri: $city")
+            Text("Müşteri Adı Soyadı: ${customer.name} ${customer.surname}")
+            Text("Müşteri Şehri: ${customer.city}")
+            Button(
+                onClick = { onDelete(customer) } // Müşteri nesnesi ile onDelete fonksiyonunu çağırıyoruz
+            ) {
+                Icon(Icons.Default.Delete, contentDescription = "")
+            }
         }
     }
 }
@@ -163,7 +176,7 @@ fun SearchBarByName(
             .fillMaxWidth()
             .shadow(5.dp, CircleShape)
             .background(Color.White, CircleShape)
-            .padding(horizontal = 20.dp)
+        //    .padding(horizontal = 20.dp)
     ) {
         TextField(
             value = text,

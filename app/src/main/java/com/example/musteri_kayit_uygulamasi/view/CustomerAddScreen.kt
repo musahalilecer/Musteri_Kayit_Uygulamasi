@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -39,15 +40,22 @@ import androidx.navigation.NavController
 import com.example.musteri_kayit_uygulamasi.R
 import com.example.musteri_kayit_uygulamasi.model.Customer
 import com.example.musteri_kayit_uygulamasi.model.Property
+import com.example.musteri_kayit_uygulamasi.model.Region
 import com.example.musteri_kayit_uygulamasi.repository.CustomerRepository
 import com.example.musteri_kayit_uygulamasi.service.CustomerService
+import com.example.musteri_kayit_uygulamasi.view.componenets.RegionDropDownMenu
 import com.example.musteri_kayit_uygulamasi.viewmodel.CustomerViewModel
+import com.example.musteri_kayit_uygulamasi.viewmodel.RegionViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomerAddScreen(navController: NavController){
+fun CustomerAddScreen(
+    navController: NavController,
+    viewModel: CustomerViewModel,
+    regionViewModel: RegionViewModel
+    ){
 
     Scaffold(
         topBar = {
@@ -63,25 +71,27 @@ fun CustomerAddScreen(navController: NavController){
             )
         }
     ) { paddingValues ->
-        CustomerAddBox(paddingValues)
+        CustomerAddBox(paddingValues, viewModel, regionViewModel)
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomerAddBox(
-    paddingValues: PaddingValues
-){
+    paddingValues: PaddingValues,
+    viewModel: CustomerViewModel,
+    regionViewModel: RegionViewModel
+) {
     var name by remember { mutableStateOf("") }
     var surname by remember { mutableStateOf("") }
     var city by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
-    var property by remember { mutableStateOf("") }
+    var selectedRegion by remember { mutableStateOf<Region?>(null) }
 
-    val firestore = FirebaseFirestore.getInstance()
-    val viewModel = CustomerViewModel(customerService = CustomerService(customerRepository = CustomerRepository(firestore)))
-    Box (
-        modifier = Modifier.padding(paddingValues)
-    ){
+    val regions by regionViewModel.regions.collectAsState(initial = emptyList())
+
+
+    Box(modifier = Modifier.padding(paddingValues)) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -89,7 +99,7 @@ fun CustomerAddBox(
         ) {
             TextField(
                 value = name,
-                onValueChange = {name = it},
+                onValueChange = { name = it },
                 label = { Text("Enter the Name") }
             )
             Spacer(modifier = Modifier.padding(top = 20.dp))
@@ -111,55 +121,35 @@ fun CustomerAddBox(
                 label = { Text("Enter the City") }
             )
             Spacer(modifier = Modifier.padding(top = 25.dp))
-            DropdownMenu(modifier = Modifier)
-            Spacer(modifier = Modifier.padding(top = 35.dp))
-        //    PropertyInputField()
-            TextField(
-                value = property,
-                onValueChange = { property = it},
-                label = { Text("Müşteri Mülk ve Arsaları Giriniz") }
+            // Bölge seçimi için dropdown menü
+            RegionDropDownMenu(
+                regionList = regions,
+                selectedRegion = selectedRegion,
+                onRegionSelected = { selectedRegion = it }
             )
-
-
-
-        /*    Button(
-                onClick = {
-                    val newProperty = Property(id = UUID.randomUUID().toString())
-                    properties.add(newProperty)
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.LightGray,
-                    contentColor = Color.Black
-                ),
-                modifier = Modifier
-                    .padding(top = 30.dp)
-            ) {
-                Text("Mülk Ekle")
-            }
-
-         */
-
             Spacer(modifier = Modifier.padding(top = 35.dp))
 
             Button(
                 onClick = {
                     // Müşteri kaydetme işlemi burada yapılacak
-                    val customer = Customer(
-                        id = UUID.randomUUID().toString(),
-                        name = name,
-                        surname = surname,
-                        city = city,
-                        phone = phone,
-                    //    properties = properties.toList()
-                    )
-                    viewModel.createCustomer(customer)
+                    if (selectedRegion != null) {
+                        val customer = Customer(
+                            id = UUID.randomUUID().toString(),
+                            name = name,
+                            surname = surname,
+                            city = city,
+                            phone = phone,
+                            region = selectedRegion
+                        //    regionIds = selectedRegion!!.id
+                        )
+                        viewModel.createCustomer(customer)
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.LightGray,
                     contentColor = Color.Black
                 ),
-                modifier = Modifier
-                    .padding(top = 30.dp)
+                modifier = Modifier.padding(top = 30.dp)
             ) {
                 Text("Müşteri Ekle")
             }
@@ -167,24 +157,6 @@ fun CustomerAddBox(
     }
 }
 
-@Composable
-fun DropdownMenu(modifier: Modifier){
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text("Müşterinin Yaşadığı bölgeyi Seçiniz")
-            Icon(
-                Icons.Default.KeyboardArrowDown,
-                contentDescription = ""
-            )
-        }
-    }
-}
 
 /*
 @Composable

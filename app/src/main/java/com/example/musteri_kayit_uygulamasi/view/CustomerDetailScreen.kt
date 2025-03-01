@@ -76,9 +76,7 @@ fun CustomerDataBox(paddingValues: PaddingValues, customer: Customer?){
                 println("${it.surname}")
                 Text("City: ${it.city}")
                 Text("Phone: ${it.phone}")
-                Text("Region: ${it.regionIds}")
-                Text("Property: ${it.propertyIds}")
-
+                Text("Region: ${it.region?.region}")
             }
         }
     }

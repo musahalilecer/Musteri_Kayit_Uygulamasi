@@ -10,36 +10,45 @@ import kotlinx.coroutines.launch
 
 class RegionViewModel(private val regionService: RegionService): ViewModel() {
     private val _regions = MutableStateFlow<List<Region>>(emptyList())
-    val region: StateFlow<List<Region>> = _regions
+    val regions: StateFlow<List<Region>> = _regions
+
+    /*
+    private val _customers = MutableStateFlow<List<Customer>>(emptyList())
+    val customers: StateFlow<List<Customer>> = _customers
+     */
     init {
         fetchRegions()
     }
 
     fun fetchRegions() {
         viewModelScope.launch {
-            regionService.getRegions()
-                .collect{
-                    _regions.value = it
-                }
+            regionService.getRegions().collect { regionsList ->
+                _regions.value = regionsList
+            }
         }
     }
 
-    fun createRegion(region: Region){
+    fun createRegion(region: Region) {
         viewModelScope.launch {
             regionService.createRegion(region)
         }
     }
 
-    fun updateRegion(region: Region){
+    fun updateRegion(region: Region) {
         viewModelScope.launch {
             regionService.updateRegion(region)
         }
     }
 
-    fun deleteRegion(regionId: String){
+    fun deleteRegion(regionId: String) {
         viewModelScope.launch {
             regionService.deleteRegion(regionId)
         }
     }
+    /*
+    suspend fun addRegionsToFirebase() {
+        regionService.addRegionsToFirebase()
+    }
 
+     */
 }
