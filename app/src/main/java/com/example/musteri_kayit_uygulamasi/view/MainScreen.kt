@@ -59,7 +59,7 @@ fun MainScreen(paddingValues: PaddingValues) {
             composable("login") { LoginScreen(navController, paddingValues) }
             composable("register") { RegisterScreen(paddingValues, navController) }
             composable("main") { MainScreen(paddingValues) }
-            composable("home") { HomeScreen(navController, paddingValues) }
+            composable("home") { HomeScreen(navController, paddingValues, regionViewModel) }
             composable("customer_add") { CustomerAddScreen(navController, customerViewModel, regionViewModel) }
             composable(
                 "customer_detail/{customerId}",

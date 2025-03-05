@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -20,6 +21,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.musteri_kayit_uygulamasi.model.Customer
 import com.example.musteri_kayit_uygulamasi.repository.CustomerRepository
@@ -70,13 +72,18 @@ fun CustomerDataBox(paddingValues: PaddingValues, customer: Customer?){
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text("Name: ${it.name}")
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+
+                }
+                Text("Name: ${it.name}", style = MaterialTheme.typography.headlineMedium)
                 println("${it.name}")
-                Text("Surname: ${it.surname}")
+                Text("Surname: ${it.surname}", style = MaterialTheme.typography.headlineMedium)
                 println("${it.surname}")
-                Text("City: ${it.city}")
-                Text("Phone: ${it.phone}")
-                Text("Region: ${it.region?.region}")
+                Text("City: ${it.city}", style = MaterialTheme.typography.bodyLarge)
+                Text("Phone: ${it.phone}", style = MaterialTheme.typography.bodyLarge)
+                Text("Region: ${it.region?.region}", style = MaterialTheme.typography.bodyLarge)
             }
         }
     }

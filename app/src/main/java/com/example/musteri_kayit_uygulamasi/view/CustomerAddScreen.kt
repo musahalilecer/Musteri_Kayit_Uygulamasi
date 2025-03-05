@@ -71,7 +71,7 @@ fun CustomerAddScreen(
             )
         }
     ) { paddingValues ->
-        CustomerAddBox(paddingValues, viewModel, regionViewModel)
+        CustomerAddBox(paddingValues, viewModel, regionViewModel, navController)
     }
 }
 
@@ -80,7 +80,8 @@ fun CustomerAddScreen(
 fun CustomerAddBox(
     paddingValues: PaddingValues,
     viewModel: CustomerViewModel,
-    regionViewModel: RegionViewModel
+    regionViewModel: RegionViewModel,
+    navController: NavController
 ) {
     var name by remember { mutableStateOf("") }
     var surname by remember { mutableStateOf("") }
@@ -143,6 +144,7 @@ fun CustomerAddBox(
                         //    regionIds = selectedRegion!!.id
                         )
                         viewModel.createCustomer(customer)
+                        navController.navigate("home")
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
