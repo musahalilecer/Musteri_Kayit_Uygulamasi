@@ -6,7 +6,8 @@ data class Customer(
     val surname: String = "",
     val city: String = "",
     val phone: String = "",
-    val region: Region? = null
+    val region: Region? = null,
+    val description: String = ""
   //  val regionIds: String = "",
  //   val propertyIds: List<String> = emptyList()
 )

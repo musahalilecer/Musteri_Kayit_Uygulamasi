@@ -88,6 +88,7 @@ fun CustomerAddBox(
     var city by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
     var selectedRegion by remember { mutableStateOf<Region?>(null) }
+    var descripton by remember { mutableStateOf("") }
 
     val regions by regionViewModel.regions.collectAsState(initial = emptyList())
 
@@ -128,6 +129,15 @@ fun CustomerAddBox(
                 selectedRegion = selectedRegion,
                 onRegionSelected = { selectedRegion = it }
             )
+            Spacer(modifier = Modifier.padding(top = 25.dp))
+
+            TextField(
+                value = descripton,
+                onValueChange = { descripton = it },
+                label = { Text("Enter the Description about Customer") },
+                singleLine = false
+            )
+
             Spacer(modifier = Modifier.padding(top = 35.dp))
 
             Button(
@@ -160,52 +170,3 @@ fun CustomerAddBox(
 }
 
 
-/*
-@Composable
-fun PropertyInputField(){
-    val properties = remember { mutableStateListOf(Property(UUID.randomUUID().toString())) }
-    properties.forEachIndexed { index, property ->
-        Column(modifier = Modifier.padding(vertical = 8.dp)) {
-            // propertyName TextFields
-            property.propertyName.forEachIndexed { idx, name ->
-                TextField(
-                    value = name,
-                    onValueChange = { newValue ->
-                        val updatedList = property.propertyName.toMutableList()
-                        updatedList[idx] = newValue
-                        properties[index] = property.copy(propertyName = updatedList)
-                    },
-                    label = { Text("Mülk Adı #$idx") }
-                )
-            }
-
-            // adress TextFields
-            property.adress.forEachIndexed { idx, address ->
-                TextField(
-                    value = address,
-                    onValueChange = { newValue ->
-                        val updatedList = property.adress.toMutableList()
-                        updatedList[idx] = newValue
-                        properties[index] = property.copy(adress = updatedList)
-                    },
-                    label = { Text("Adres #$idx") }
-                )
-            }
-
-            // volume TextFields
-            property.volume.forEachIndexed { idx, volume ->
-                TextField(
-                    value = volume,
-                    onValueChange = { newValue ->
-                        val updatedList = property.volume.toMutableList()
-                        updatedList[idx] = newValue
-                        properties[index] = property.copy(volume = updatedList)
-                    },
-                    label = { Text("Hacim #$idx") }
-                )
-            }
-        }
-    }
-}
-
- */

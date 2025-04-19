@@ -8,6 +8,12 @@ class CustomerService(private val customerRepository: CustomerRepository) {
     fun fetchCustomers(): Flow<List<Customer>> {
         return customerRepository.getCustomers()
     }
+    suspend fun fetchCustomerByName(name: String): Flow<List<Customer?>> {
+        return customerRepository.getCustomerByName(name)
+    }
+    suspend fun fetchCustomerByCity(city: String): Flow<List<Customer?>> {
+        return customerRepository.getCustomerByCity(city)
+    }
     suspend fun createCustomer(customer: Customer){
         customerRepository.createCustomer(customer)
     }

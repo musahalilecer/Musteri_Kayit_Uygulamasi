@@ -21,15 +21,31 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import com.example.musteri_kayit_uygulamasi.repository.CustomerRepository
+import com.example.musteri_kayit_uygulamasi.service.CustomerService
+import com.example.musteri_kayit_uygulamasi.viewmodel.CustomerViewModel
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
 @Composable
-fun SearchBar() {
+fun SearchBar(
+    query: String,
+    onQueryChanged: (String) -> Unit,
+    onSearch: (String) -> Unit) {
+    val customerViewModel = CustomerViewModel(
+        customerService = CustomerService(
+            customerRepository = CustomerRepository(
+                firestore = FirebaseFirestore.getInstance()
+            )
+        )
+    )
     SearchBarByName(
         modifier = Modifier.fillMaxWidth(),
         hint = "Müşteri Ara...",
-        onSearch = { query ->
-            // Arama mantığını burada işleyin
-        }
+        onSearch = { name ->
+
+        },
+        onQueryChanged = {}
     )
 }
 
@@ -38,7 +54,8 @@ fun SearchBar() {
 fun SearchBarByName(
     modifier: Modifier = Modifier,
     hint: String = "",
-    onSearch: (String) -> Unit = {}
+    onSearch: (String) -> Unit = {},
+    onQueryChanged: (String) -> Unit
 ) {
     var text by remember {
         mutableStateOf("")
@@ -59,6 +76,8 @@ fun SearchBarByName(
             onValueChange = {
                 text = it
                 isHintDisplayed = it.isEmpty()
+                onQueryChanged(it)
+
             },
             maxLines = 1,
             singleLine = true,

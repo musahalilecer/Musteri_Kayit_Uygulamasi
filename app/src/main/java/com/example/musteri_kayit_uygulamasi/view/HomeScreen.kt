@@ -55,6 +55,7 @@ import androidx.navigation.NavController
 import com.example.musteri_kayit_uygulamasi.model.Customer
 import com.example.musteri_kayit_uygulamasi.repository.CustomerRepository
 import com.example.musteri_kayit_uygulamasi.service.CustomerService
+import com.example.musteri_kayit_uygulamasi.view.componenets.CustomerItem
 import com.example.musteri_kayit_uygulamasi.view.componenets.RegionDropDownMenu
 import com.example.musteri_kayit_uygulamasi.view.componenets.SearchBar
 import com.example.musteri_kayit_uygulamasi.view.componenets.SearchBarByName
@@ -70,6 +71,8 @@ fun HomeScreen(navController: NavController, paddingValues: PaddingValues, regio
     val firestore = FirebaseFirestore.getInstance()
     val viewModel = CustomerViewModel(customerService = CustomerService(customerRepository = CustomerRepository(firestore)))
     val state by viewModel.customers.collectAsState()
+
+    val query by viewModel.query.collectAsState()
 
     Scaffold(
 
@@ -103,8 +106,14 @@ fun HomeScreen(navController: NavController, paddingValues: PaddingValues, regio
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
-            SearchBar()
-            TopBarWithDropDown(regionViewModel)
+
+            SearchBar(
+                query = query,
+                onQueryChanged = {},
+                onSearch = {}
+                )
+
+        //    TopBarWithDropDown(regionViewModel)
             /*
             SearchBarByName(
                 modifier = Modifier.fillMaxWidth(),
@@ -187,6 +196,7 @@ fun CustomerCard(
         }
     }
 }
+
 
 
 

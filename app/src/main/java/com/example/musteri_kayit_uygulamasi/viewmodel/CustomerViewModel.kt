@@ -13,6 +13,9 @@ class CustomerViewModel(private val customerService: CustomerService): ViewModel
     private val _customers = MutableStateFlow<List<Customer>>(emptyList())
     val customers: StateFlow<List<Customer>> = _customers
 
+    private val _query = MutableStateFlow("")
+    val query: StateFlow<String> = _query
+
     init {
         fetchCustomer()
     }
@@ -22,6 +25,21 @@ class CustomerViewModel(private val customerService: CustomerService): ViewModel
                 .collect{ _customers.value = it}
         }
     }
+
+    fun searchCustomerByName(name: String){
+        viewModelScope.launch {
+            customerService.fetchCustomerByName(name)
+                .collect{ _customers.value = it as List<Customer> }
+        }
+    }
+
+    fun searchCustomerByCity(city: String){
+        viewModelScope.launch {
+            customerService.fetchCustomerByCity(city)
+                .collect{ _customers.value = it as List<Customer> }
+        }
+    }
+
     fun createCustomer(customer: Customer){
         viewModelScope.launch {
             customerService.createCustomer(customer)
